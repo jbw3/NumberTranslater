@@ -10,16 +10,17 @@
 using namespace std;
 
 // ----- Constants -----
-
-const int MAX_PLACES = 9;
-const string WORDS[2][10] = 
-                           {{"zero", "one", "two", "three", "four", "five", "six", 
-                             "seven", "eight", "nine"},
-                            {"", "", "twenty", "thirty", "forty", "fifty", "sixty", 
-                             "seventy", "eighty", "ninety"}};
-const string TEENS[] = {"ten", "eleven", "twelve", "thirteen", "fourteen",
-                        "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
-const std::string ORDERS[] = {"", "thousand", "million"};
+const unsigned int MAX_PLACES = 36;
+const std::string WORDS[2][10] = 
+                                {{"zero", "one", "two", "three", "four", "five", "six", 
+                                  "seven", "eight", "nine"},
+                                 {"", "", "twenty", "thirty", "forty", "fifty", "sixty", 
+                                  "seventy", "eighty", "ninety"}};
+const std::string TEENS[] = {"ten", "eleven", "twelve", "thirteen", "fourteen",
+                             "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+const std::string ORDERS[] = {"", "thousand", "million", "billion", "trillion", "quadrillion",
+                              "quintillion", "sextillion", "septillion", "octillion", "nonillion",
+                              "decillion"};
 
 // ----- Function Prototypes ------
 bool isNum(const string& str);
@@ -40,7 +41,7 @@ void translate(const string& inStr, string& outStr);
 
 int main()
 {
-    string inStr, outStr;
+    std::string inStr, outStr;
 
     getline(cin, inStr);
     while (inStr != "")
