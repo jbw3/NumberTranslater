@@ -7,10 +7,8 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 // ----- Constants -----
-const unsigned int MAX_PLACES = 36;
+const unsigned int MAX_PLACES = 51;
 const std::string WORDS[2][10] = 
                                 {{"zero", "one", "two", "three", "four", "five", "six", 
                                   "seven", "eight", "nine"},
@@ -20,14 +18,15 @@ const std::string TEENS[] = {"ten", "eleven", "twelve", "thirteen", "fourteen",
                              "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
 const std::string ORDERS[] = {"", "thousand", "million", "billion", "trillion", "quadrillion",
                               "quintillion", "sextillion", "septillion", "octillion", "nonillion",
-                              "decillion"};
+                              "decillion", "undecillion", "duodecillion", "tredecillion",
+                          	  "quattuordecillion", "quindecillion"};
 
 // ----- Function Prototypes ------
-bool isNum(const string& str);
+bool isNum(const std::string& str);
 
 int charToInt(char ch);
 
-string stripLeadingZeros(string str);
+std::string stripLeadingZeros(const std::string& str);
 
 /**
  * @brief Translate a group of three numbers
@@ -35,42 +34,42 @@ string stripLeadingZeros(string str);
  * @param [out] outStr a string of words representing the number passed in
  * @param [in] returnZero whether to return "zero" if inStr is 0
  */
-void translateGroup(const string& inStr, string& outStr, bool returnZero);
+void translateGroup(const std::string& inStr, std::string& outStr, bool returnZero);
 
-void translate(const string& inStr, string& outStr);
+void translate(const std::string& inStr, std::string& outStr);
 
 int main()
 {
     std::string inStr, outStr;
 
-    getline(cin, inStr);
+    getline(std::cin, inStr);
     while (inStr != "")
     {
         if (!isNum(inStr))
         {
-            cout << "You did not enter a valid number.\n";
+            std::cout << "You did not enter a valid number.\n";
         }
         else
         {
             inStr = stripLeadingZeros(inStr);
             if (inStr.length() > MAX_PLACES)
             {
-                cout << "I don't know numbers that high!\n";
+                std::cout << "I don't know numbers that high!\n";
             }
             else
             {
                 translate(inStr, outStr);
-                cout << outStr << '\n';
+                std::cout << outStr << '\n';
             }
         }
 
-        getline(cin, inStr);
+        getline(std::cin, inStr);
     }
 
     return 0;
 }
 
-bool isNum(const string& str)
+bool isNum(const std::string& str)
 {
     for (int i = 0; i < str.length(); ++i)
     {
@@ -88,7 +87,7 @@ int charToInt(char ch)
     return int(ch - '0');
 }
 
-string stripLeadingZeros(string str)
+std::string stripLeadingZeros(const std::string& str)
 {
     int i = 0;
     while (i < str.length() - 1 && str[i] == '0')
@@ -96,16 +95,17 @@ string stripLeadingZeros(string str)
         ++i;
     }
 
+    std::string newStr;
     if (i < str.length())
     {
-        str = str.substr(i);
+        newStr = str.substr(i);
     }
 
-    return str;
+    return newStr;
 }
 
 /// @todo outStr should be appended to
-void translateGroup(const string& inStr, string& outStr, bool returnZero)
+void translateGroup(const std::string& inStr, std::string& outStr, bool returnZero)
 {
     char ch;
     bool isTeen = false;
@@ -155,7 +155,7 @@ void translateGroup(const string& inStr, string& outStr, bool returnZero)
     }
 }
 
-void translate(const string& inStr, string& outStr)
+void translate(const std::string& inStr, std::string& outStr)
 {
     size_t len = inStr.length();
     size_t orderIdx = 0;
