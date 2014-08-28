@@ -11,7 +11,7 @@ using namespace std;
 
 // ----- Constants -----
 
-const int MAX_PLACES = 3;
+const int MAX_PLACES = 9;
 const string WORDS[2][10] = 
                            {{"zero", "one", "two", "three", "four", "five", "six", 
                              "seven", "eight", "nine"},
@@ -19,6 +19,7 @@ const string WORDS[2][10] =
                              "seventy", "eighty", "ninety"}};
 const string TEENS[] = {"ten", "eleven", "twelve", "thirteen", "fourteen",
                         "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+const std::string ORDERS[] = {"", "thousand", "million"};
 
 // ----- Function Prototypes ------
 bool isNum(const string& str);
@@ -31,10 +32,11 @@ string stripLeadingZeros(string str);
  * @brief Translate a group of three numbers
  * @param [in] inStr a string of digits
  * @param [out] outStr a string of words representing the number passed in
+ * @param [in] returnZero whether to return "zero" if inStr is 0
  */
-void translateGroup(const string& inStr, string& outStr);
+void translateGroup(const string& inStr, string& outStr, bool returnZero);
 
-string translate(const string&);
+void translate(const string& inStr, string& outStr);
 
 int main()
 {
@@ -56,7 +58,7 @@ int main()
             }
             else
             {
-                translateGroup(inStr, outStr);
+                translate(inStr, outStr);
                 cout << outStr << '\n';
             }
         }
@@ -101,7 +103,8 @@ string stripLeadingZeros(string str)
     return str;
 }
 
-void translateGroup(const string& inStr, string& outStr)
+/// @todo outStr should be appended to
+void translateGroup(const string& inStr, string& outStr, bool returnZero)
 {
     char ch;
     bool isTeen = false;
@@ -112,7 +115,7 @@ void translateGroup(const string& inStr, string& outStr)
     if (len == 0 || len > 3)
         return;
 
-    if (len == 3)
+    if (len == 3 && inStr.at(len-3) != '0')
     {
         outStr.append(WORDS[0][charToInt(inStr.at(len-3))]);
         outStr.append(" hundred");
@@ -137,7 +140,7 @@ void translateGroup(const string& inStr, string& outStr)
     if (len >= 1 && !isTeen)
     {
         ch = inStr.at(len-1);
-        if (len == 1 || ch != '0')
+        if ((len == 1 && returnZero) || ch != '0')
         {
             if (!outStr.empty())
             {
@@ -151,27 +154,60 @@ void translateGroup(const string& inStr, string& outStr)
     }
 }
 
-string translate(const string& str)
+void translate(const string& inStr, string& outStr)
 {
-    int len = str.length();
+    size_t len = inStr.length();
+    size_t orderIdx = 0;
+    bool displayZero = true;
+    std::string temp;
 
-    string word;
+    if (len == 0)
+        return;
 
-    for (int i = 0; i < len; i++)
+    size_t idx, sel;
+    if (len <= 3)
     {
-        if (i == len - 2 && str[i] == '1')
+        idx = 0;
+        sel = len;
+    }
+    else
+    {
+        idx = len - 3;
+        sel = 3;
+    }
+
+    outStr.clear();
+
+    bool done = (len == 0);
+    while (!done)
+    {
+        translateGroup(inStr.substr(idx, sel), temp, displayZero);
+        if (!temp.empty())
         {
-            word += TEENS[charToInt(str[i+1])];
-            break;
+            if (orderIdx > 0)
+            {
+                temp.append(" ");
+                temp.append(ORDERS[orderIdx]);
+            }
+            if (!outStr.empty())
+                temp.append(" ");
+            outStr = temp + outStr;
+        }
+
+        displayZero = false;
+        ++orderIdx;
+        if (idx == 0)
+        {
+            done = true;
+        }
+        else if (idx < 3)
+        {
+            sel = idx;
+            idx = 0;
         }
         else
         {
-            if (str[i] != '0' || len == 1)
-            {
-                word += WORDS[len-i-1][charToInt(str[i])];
-            }
+            idx -= 3;
         }
     }
-
-    return word;
 }
