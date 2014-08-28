@@ -9,8 +9,10 @@
 
 using namespace std;
 
-const int MAX_PLACES = 2;
-const string WORDS[MAX_PLACES][10] = 
+// ----- Constants -----
+
+const int MAX_PLACES = 3;
+const string WORDS[2][10] = 
                            {{"zero", "one", "two", "three", "four", "five", "six", 
                              "seven", "eight", "nine"},
                             {"", "", "twenty", "thirty", "forty", "fifty", "sixty", 
@@ -18,32 +20,48 @@ const string WORDS[MAX_PLACES][10] =
 const string TEENS[] = {"ten", "eleven", "twelve", "thirteen", "fourteen",
                         "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
 
-// function prototypes
+// ----- Function Prototypes ------
 bool isNum(const string& str);
-int charToInt(const char&);
+
+int charToInt(char ch);
+
 string stripLeadingZeros(string str);
+
+/**
+ * @brief Translate a group of three numbers
+ * @param [in] inStr a string of digits
+ * @param [out] outStr a string of words representing the number passed in
+ */
+void translateGroup(const string& inStr, string& outStr);
+
 string translate(const string&);
 
 int main()
 {
-    string str;
+    string inStr, outStr;
 
-    getline(cin, str);
-    while (str != "")
+    getline(cin, inStr);
+    while (inStr != "")
     {
-        if (!isNum(str))
+        if (!isNum(inStr))
         {
-            cout << "Not a number.\n";
+            cout << "You did not enter a valid number.\n";
         }
         else
         {
-            if (str.length() > MAX_PLACES)
+            inStr = stripLeadingZeros(inStr);
+            if (inStr.length() > MAX_PLACES)
+            {
                 cout << "I don't know numbers that high!\n";
+            }
             else
-                cout << translate(str) << endl;
+            {
+                translateGroup(inStr, outStr);
+                cout << outStr << '\n';
+            }
         }
 
-        getline(cin, str);
+        getline(cin, inStr);
     }
 
     return 0;
@@ -62,7 +80,7 @@ bool isNum(const string& str)
     return true;
 }
 
-int charToint(const char& ch)
+int charToInt(char ch)
 {
     return int(ch - '0');
 }
@@ -83,22 +101,59 @@ string stripLeadingZeros(string str)
     return str;
 }
 
-/**
- * @brief Translate a group of three numbers
- * @param str a string of digits
- * @return a string of words representing the number passed in
- */
-//string translateGroup(const string& str)
-//{
-//    if ()
-//}
+void translateGroup(const string& inStr, string& outStr)
+{
+    char ch;
+    bool isTeen = false;
+    size_t len = inStr.length();
+
+    outStr.clear();
+
+    if (len == 0 || len > 3)
+        return;
+
+    if (len == 3)
+    {
+        outStr.append(WORDS[0][charToInt(inStr.at(len-3))]);
+        outStr.append(" hundred");
+    }
+    if (len >= 2)
+    {
+        ch = inStr.at(len-2);
+        if (ch == '1')
+        {
+            isTeen = true;
+            if (!outStr.empty())
+                outStr.append(" ");
+            outStr.append(TEENS[charToInt(inStr.at(len-1))]);
+        }
+        else if (ch != '0')
+        {
+            if (!outStr.empty())
+                outStr.append(" ");
+            outStr.append(WORDS[1][charToInt(ch)]);
+        }
+    }
+    if (len >= 1 && !isTeen)
+    {
+        ch = inStr.at(len-1);
+        if (len == 1 || ch != '0')
+        {
+            if (!outStr.empty())
+            {
+                if (inStr.at(len-2) == '0')
+                    outStr.append(" ");
+                else
+                    outStr.append("-");
+            }
+            outStr.append(WORDS[0][charToInt(ch)]);
+        }
+    }
+}
 
 string translate(const string& str)
 {
     int len = str.length();
-
-    if (len > MAX_PLACES)
-        return "I don't know numbers that high!";
 
     string word;
 
@@ -106,14 +161,14 @@ string translate(const string& str)
     {
         if (i == len - 2 && str[i] == '1')
         {
-            word += TEENS[charToint(str[i+1])];
+            word += TEENS[charToInt(str[i+1])];
             break;
         }
         else
         {
             if (str[i] != '0' || len == 1)
             {
-                word += WORDS[len-i-1][charToint(str[i])];
+                word += WORDS[len-i-1][charToInt(str[i])];
             }
         }
     }
