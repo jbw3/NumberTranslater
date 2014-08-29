@@ -52,7 +52,14 @@ std::string stripLeadingZeros(const std::string& str)
     return newStr;
 }
 
-/// @todo outStr should be appended to
+/**
+ * @todo outStr should be appended to
+ *
+ * @brief Translate a group of three numbers
+ * @param [in] inStr a string of digits
+ * @param [out] outStr a string of words representing the number passed in
+ * @param [in] returnZero whether to return "zero" if inStr is 0
+ */
 void translateGroup(const std::string& inStr, std::string& outStr, bool returnZero)
 {
     char ch;
