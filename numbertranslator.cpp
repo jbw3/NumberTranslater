@@ -5,10 +5,10 @@
 
 #include "numbertranslator.h"
 
-const std::string WORDS[2][10] = 
-                                {{"zero", "one", "two", "three", "four", "five", "six", 
+const std::string WORDS[2][10] =
+                                {{"zero", "one", "two", "three", "four", "five", "six",
                                   "seven", "eight", "nine"},
-                                 {"", "", "twenty", "thirty", "forty", "fifty", "sixty", 
+                                 {"", "", "twenty", "thirty", "forty", "fifty", "sixty",
                                   "seventy", "eighty", "ninety"}};
 const std::string TEENS[] = {"ten", "eleven", "twelve", "thirteen", "fourteen",
                              "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
@@ -19,7 +19,7 @@ const std::string ORDERS[] = {"", "thousand", "million", "billion", "trillion", 
 
 bool isNum(const std::string& str)
 {
-    for (int i = 0; i < str.length(); ++i)
+    for (size_t i = 0; i < str.length(); ++i)
     {
         if (str.at(i) < '0' || str.at(i) > '9')
         {
@@ -32,12 +32,12 @@ bool isNum(const std::string& str)
 
 int charToInt(char ch)
 {
-    return int(ch - '0');
+    return static_cast<int>(ch - '0');
 }
 
 std::string stripLeadingZeros(const std::string& str)
 {
-    int i = 0;
+    size_t i = 0;
     while (i < str.length() - 1 && str[i] == '0')
     {
         ++i;
@@ -53,8 +53,6 @@ std::string stripLeadingZeros(const std::string& str)
 }
 
 /**
- * @todo outStr should be appended to
- *
  * @brief Translate a group of three numbers
  * @param [in] inStr a string of digits
  * @param [out] outStr a string of words representing the number passed in
