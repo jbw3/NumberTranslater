@@ -1,19 +1,20 @@
 # Makefile
 
-ODIR = obj
+OBJDIR = obj
 
-CC = g++
+CXX = clang++
+CXXFLAGS = -std=c++14
 TARGET = NumberTranslator
 
-$(TARGET): $(ODIR)/main.o $(ODIR)/numbertranslator.o
-	$(CC) $(ODIR)/main.o $(ODIR)/numbertranslator.o -o $(TARGET)
+$(TARGET): $(OBJDIR)/main.o $(OBJDIR)/numbertranslator.o
+	$(CXX) $(OBJDIR)/main.o $(OBJDIR)/numbertranslator.o -o $(TARGET)
 
-$(ODIR)/main.o: main.cpp
-	$(CC) -c main.cpp -o $(ODIR)/main.o
+$(OBJDIR)/main.o: main.cpp
+	$(CXX) $(CXXFLAGS) -c main.cpp -o $(OBJDIR)/main.o
 
-$(ODIR)/numbertranslator.o: numbertranslator.cpp numbertranslator.h
-	$(CC) -c numbertranslator.cpp -o $(ODIR)/numbertranslator.o
+$(OBJDIR)/numbertranslator.o: numbertranslator.cpp numbertranslator.h
+	$(CXX) $(CXXFLAGS) -c numbertranslator.cpp -o $(OBJDIR)/numbertranslator.o
 
 .PHONY: clean
 clean:
-	rm $(ODIR)/*.o $(TARGET)
+	rm $(OBJDIR)/*.o $(TARGET)
